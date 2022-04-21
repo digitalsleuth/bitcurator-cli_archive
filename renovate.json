@@ -5,8 +5,8 @@
     ":pinVersions",
     ":automergePatch",
     ":automergeMinor",
-    ":assignee(bitcurator)",
-    ":reviewer(bitcurator)",
+    ":assignee(digitalsleuth)",
+    ":reviewer(digitalsleuth)",
     ":label(kind/renovate)"
   ]
 }

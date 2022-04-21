@@ -263,7 +263,7 @@ const getCurrentVersion = () => {
 const listReleases = () => {
   return github.repos.listReleases({
     owner: 'bitcurator',
-    repo: 'bitcurator-distro-salt'
+    repo: 'bitcurator-salt'
   })
 }
 
@@ -329,7 +329,7 @@ const downloadReleaseFile = (version, filename) => {
 
   return new Promise((resolve, reject) => {
     const output = fs.createWriteStream(filepath)
-    const req = request.get(`https://github.com/bitcurator/bitcurator-distro-salt/releases/download/${version}/${filename}`)
+    const req = request.get(`https://github.com/digitalsleuth/bitcurator-salt/releases/download/${version}/${filename}`)
     req.on('error', (err) => {
       reject(err)
     })
@@ -348,9 +348,9 @@ const downloadReleaseFile = (version, filename) => {
 }
 
 const downloadRelease = (version) => {
-  console.log(`>> downloading bitcurator-distro-salt-${version}.tar.gz`)
+  console.log(`>> downloading bitcurator-salt-${version}.tar.gz`)
 
-  const filepath = `${cachePath}/${version}/bitcurator-distro-salt-${version}.tar.gz`
+  const filepath = `${cachePath}/${version}/bitcurator-salt-${version}.tar.gz`
 
   if (fs.existsSync(filepath) && cli['--no-cache'] === false) {
     return new Promise((resolve, reject) => { resolve() })
@@ -358,7 +358,7 @@ const downloadRelease = (version) => {
 
   return new Promise((resolve, reject) => {
     const output = fs.createWriteStream(filepath)
-    const req = request.get(`https://github.com/bitcurator/bitcurator-distro-salt/archive/${version}.tar.gz`)
+    const req = request.get(`https://github.com/digitalsleuth/bitcurator-salt/archive/${version}.tar.gz`)
     req.on('error', (err) => {
       reject(err)
     })
@@ -453,17 +453,17 @@ const downloadUpdate = async (version) => {
   console.log(`> downloading ${version}`)
 
   await mkdirp(`${cachePath}/${version}`)
-  await downloadReleaseFile(version, `bitcurator-distro-salt-${version}.tar.gz.asc`)
-  await downloadReleaseFile(version, `bitcurator-distro-salt-${version}.tar.gz.sha256`)
-  await downloadReleaseFile(version, `bitcurator-distro-salt-${version}.tar.gz.sha256.asc`)
+  await downloadReleaseFile(version, `bitcurator-salt-${version}.tar.gz.asc`)
+  await downloadReleaseFile(version, `bitcurator-salt-${version}.tar.gz.sha256`)
+  await downloadReleaseFile(version, `bitcurator-salt-${version}.tar.gz.sha256.asc`)
   await downloadRelease(version)
-  await validateFile(version, `bitcurator-distro-salt-${version}.tar.gz`)
-  await validateSignature(version, `bitcurator-distro-salt-${version}.tar.gz.sha256`)
-  await extractUpdate(version, `bitcurator-distro-salt-${version}.tar.gz`)
+  await validateFile(version, `bitcurator-salt-${version}.tar.gz`)
+  await validateSignature(version, `bitcurator-salt-${version}.tar.gz.sha256`)
+  await extractUpdate(version, `bitcurator-salt-${version}.tar.gz`)
 }
 
 const performUpdate = (version) => {
-  const filepath = `${cachePath}/${version}/bitcurator-distro-salt-${version.replace('v', '')}`
+  const filepath = `${cachePath}/${version}/bitcurator-salt-${version.replace('v', '')}`
   const outputFilepath = `${cachePath}/${version}/results.yml`
   const logFilepath = `${cachePath}/${version}/saltstack.log`
 
