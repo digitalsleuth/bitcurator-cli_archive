@@ -262,7 +262,7 @@ const getCurrentVersion = () => {
 
 const listReleases = () => {
   return github.repos.listReleases({
-    owner: 'bitcurator',
+    owner: 'digitalsleuth',
     repo: 'bitcurator-salt'
   })
 }
