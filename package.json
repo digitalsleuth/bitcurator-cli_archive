@@ -1,6 +1,6 @@
 {
   "name": "bitcurator-cli",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Manage your bitcurator installation",
   "main": "bitcurator-cli.js",
   "bin": {
@@ -23,6 +23,7 @@
     "js-yaml": "3.14.0",
     "mkdirp": "1.0.4",
     "openpgp": "4.10.8",
+    "proxy-agent": "^5.0.0",
     "request": "2.88.2",
     "semver": "7.3.4",
     "split": "1.0.1",

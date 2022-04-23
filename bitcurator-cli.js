@@ -476,7 +476,7 @@ const performUpdate = (version) => {
   }
  
   if (!isModeSpecified) {
-    let savedMode = matConfiguration['mode']
+    let savedMode = bitcuratorConfiguration['mode']
     if (validModes.indexOf(savedMode) != -1) {
       cli['--mode'] = savedMode
 	    console.log(`> using previous mode: ${cli['--mode']}`)
@@ -661,7 +661,7 @@ ${yaml.safeDump(config)}
 
   await setup()
 
-  matConfiguration = await loadConfiguration()
+  bitcuratorConfiguration = await loadConfiguration()
 
   const version = await getCurrentVersion()
   console.log(`> bitcurator-version: ${version}\n`)
