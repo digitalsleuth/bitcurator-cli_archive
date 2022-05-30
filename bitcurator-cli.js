@@ -55,33 +55,7 @@ Version: GnuPG
 
 -----BEGIN PGP PUBLIC KEY BLOCK-----
 
-mQENBF7DLN8BCADbBfzccuYp0xvDsK1yP+L3R+7qKR58jFGKOKUaBKdsEj/pljQ7
-svtfYQfU+a9NdaDCBKud+pJ2FkO44TfkflW7RnQBcgY4HY1EZ1NX9/9yslkHQG0i
-59TbXl+0gLUdhEaHWBRdJLAutp81G1vQW5jIHqCTnfqoE7ckBDxcxJNbarzdgjhQ
-5CHkDZ/P43Qrdh8iFLAaOSDgHescJm477cFjKAvntJERePBInIuHpcEViETsN9Cq
-BQtUW0mfnbipxnjpGcqK7ni9SDzoywXZgvEjx8Y9oONQG7lkjj+LSwd82aAi2Sc1
-Nh0943FhxmPxoN9V+gHUZX3RjLAz9FiLOaaFABEBAAG0JUNvcmV5IEZvcm1hbiA8
-Y29yZXlAZGlnaXRhbHNsZXV0aC5jYT6JAU4EEwEKADgWIQQukGX9vTW5a/psLU3p
-lObkTPmS4wUCXsMs3wIbAwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgAAKCRDplObk
-TPmS46QjCAC3E+jSEc+sQge+v+XP+EY6HARLRdsd4CwVGqpnLzVNO8afmonwCMrw
-6B4qJTfUtEx8CREkM7smfaDPh7NVW4nZ1Pdi1sc4CyXZdL5HJwM9NDHxxci3VAAE
-Vf2dy7c6i4Rxm2HBWpfwxCRDqTyMYK8cQkh5DCftL0TW+N9s70hvf61HYlovc3Ap
-4CifU8khLP7KpEHOliHRzv254taOGxFRp1ot0Fz+Zznm2KUhoLOJoo+AXooBYLDP
-C7CEOR+Xn2DZzExXY9NhQnKDOie7XBU6rH3cEtAG+NZGKh1kSzRAQpeHiwViySxw
-so2+C17uqb6m1MQfFVQNxaxrfM1NWH/MuQENBF7DLN8BCAC2CTY3d0ikwJbfgb9p
-bup6ITK6f7mQvYo32iK+vJXlzjv05zC01PBpUJYFrBCR7lobqiie1RcwNzNp/wa1
-DNxdwhQQb6ac6ZE5pgB2iMMYIzrooUdoZbQUg1Pwj2xcAosJ0iRNXN+C00gWzT48
-LIBwcX8KTaRvcmjgbHJXL6jtfFycO2UYpOutwSCno5TSi7RLU0xafVq+AgAtOd0S
-rHopyS47ZgxHtHkmWn11c5bY9/J1IL8C546eMoNHnelai56hclPbdDcFtHbR5HeD
-1q8q/fOevhR/qpQ7SouapRi3dB/JM9SK5sVZL8/HkyFKyqMkoJHLg0JYyIlo8LRv
-yKb9ABEBAAGJATYEGAEKACAWIQQukGX9vTW5a/psLU3plObkTPmS4wUCXsMs3wIb
-DAAKCRDplObkTPmS44aGB/9LGDttqJYEsVCFDJcPWeGko1ly/z3QJ72F2S3ywUEH
-K/Shf9n0RwMfbc/TcXhbvxRMUI6+tOKrc/WPEDAIx5u71TKaPe9JTFO29etVNmQf
-mpqTc1Dj05iMrgvjW7pNV29AbuOV3jtXA0SZgcEW+UXOfO8OaQe1+Qms+eza4Knp
-d/YqllH6UcAOEJ1mufv8pgkCqR2smj0badF0DH0u6ti2DS+hAYh76kPIbTGp7R+Y
-M9G107FfZBXe6nDgF/KTkSMtpIFNXKmY6+/VFpUdKl3mPFA6WAHCzF7NpHa216TX
-T57/PvPUNcoRFdhJQE10ULU/64yw9DtNePM0qNrldyFc
-=uQiT
+
 -----END PGP PUBLIC KEY BLOCK-----
 `
 
@@ -92,6 +66,9 @@ Try rebooting your system and trying the operation again.
 Sometimes problems occur due to network or server issues when
 downloading packages, in which case retrying your operation
 a bit later might lead to good results.
+Additionally, if you are operating behind a proxy, you may
+need to configure your environment to allow access through
+the proxy.
 
 To determine the nature of the issue, please review the
 saltstack.log file under /var/cache/bitcurator/cli/ in the
@@ -153,6 +130,13 @@ const validOS = async () => {
       osCodename = 'focal'
       return true
     }
+
+    if (contents.indexOf('UBUNTU_CODENAME=jammy') !== -1) {
+      osVersion = '22.04'
+      osCodename = 'jammy'
+      return true
+    }
+
     throw new Error('Invalid OS or unable to determine Ubuntu version')
   } catch (err) {
     if (err && err.code === 'ENOENT') {
@@ -262,7 +246,7 @@ const getCurrentVersion = () => {
 
 const listReleases = () => {
   return github.repos.listReleases({
-    owner: 'digitalsleuth',
+    owner: 'bitcurator',
     repo: 'bitcurator-salt'
   })
 }
@@ -329,7 +313,7 @@ const downloadReleaseFile = (version, filename) => {
 
   return new Promise((resolve, reject) => {
     const output = fs.createWriteStream(filepath)
-    const req = request.get(`https://github.com/digitalsleuth/bitcurator-salt/releases/download/${version}/${filename}`)
+    const req = request.get(`https://github.com/bitcurator/bitcurator-salt/releases/download/${version}/${filename}`)
     req.on('error', (err) => {
       reject(err)
     })
@@ -358,7 +342,7 @@ const downloadRelease = (version) => {
 
   return new Promise((resolve, reject) => {
     const output = fs.createWriteStream(filepath)
-    const req = request.get(`https://github.com/digitalsleuth/bitcurator-salt/archive/${version}.tar.gz`)
+    const req = request.get(`https://github.com/bitcurator/bitcurator-salt/archive/${version}.tar.gz`)
     req.on('error', (err) => {
       reject(err)
     })
